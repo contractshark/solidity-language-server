@@ -3,16 +3,15 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import * as vscode from "vscode";
-import { memoize } from "./memoize";
+import * as vscode from 'vscode';
+import { memoize } from './memoize';
 
-type LogLevel = "Trace" | "Info" | "Error";
+type LogLevel = 'Trace' | 'Info' | 'Error';
 
 export default class Logger {
-
   @memoize
   private get output(): vscode.OutputChannel {
-    return vscode.window.createOutputChannel("Solidity");
+    return vscode.window.createOutputChannel('Solidity');
   }
 
   private data2String(data: any): string {
@@ -26,19 +25,21 @@ export default class Logger {
   }
 
   public info(message: string, data?: any): void {
-    this.logLevel("Info", message, data);
+    this.logLevel('Info', message, data);
   }
 
   public error(message: string, data?: any): void {
     // See https://github.com/Microsoft/TypeScript/issues/10496
-    if (data && data.message === "No content available.") {
+    if (data && data.message === 'No content available.') {
       return;
     }
-    this.logLevel("Error", message, data);
+    this.logLevel('Error', message, data);
   }
 
   public logLevel(level: LogLevel, message: string, data?: any): void {
-    this.output.appendLine(`[${level}  - ${(new Date().toLocaleTimeString())}] ${message}`);
+    this.output.appendLine(
+      `[${level}  - ${new Date().toLocaleTimeString()}] ${message}`,
+    );
     if (data) {
       this.output.appendLine(this.data2String(data));
     }

@@ -49,7 +49,8 @@ export namespace SolidityServerLogLevel {
 
 export class SolidityServiceConfiguration {
   public readonly npmLocation: string | null;
-  public readonly solServerLogLevel: SolidityServerLogLevel = SolidityServerLogLevel.Off;
+  public readonly solServerLogLevel: SolidityServerLogLevel =
+    SolidityServerLogLevel.Off;
   public readonly solServerPluginPaths: string[];
 
   public static loadFromWorkspace(): SolidityServiceConfiguration {
@@ -59,28 +60,41 @@ export class SolidityServiceConfiguration {
   private constructor() {
     const configuration = vscode.workspace.getConfiguration();
 
-    this.npmLocation = SolidityServiceConfiguration.readNpmLocation(configuration);
-    this.solServerLogLevel = SolidityServiceConfiguration.readSolidityServerLogLevel(configuration);
-    this.solServerPluginPaths = SolidityServiceConfiguration.readTsServerPluginPaths(configuration);
+    this.npmLocation = SolidityServiceConfiguration.readNpmLocation(
+      configuration,
+    );
+    this.solServerLogLevel = SolidityServiceConfiguration.readSolidityServerLogLevel(
+      configuration,
+    );
+    this.solServerPluginPaths = SolidityServiceConfiguration.readTsServerPluginPaths(
+      configuration,
+    );
   }
 
   public isEqualTo(other: SolidityServiceConfiguration): boolean {
-    return this.npmLocation === other.npmLocation
-      && this.solServerLogLevel === other.solServerLogLevel
-      && arrays.equals(this.solServerPluginPaths, other.solServerPluginPaths);
+    return (
+      this.npmLocation === other.npmLocation &&
+      this.solServerLogLevel === other.solServerLogLevel &&
+      arrays.equals(this.solServerPluginPaths, other.solServerPluginPaths)
+    );
   }
 
-  private static readSolidityServerLogLevel(configuration: vscode.WorkspaceConfiguration): SolidityServerLogLevel {
+  private static readSolidityServerLogLevel(
+    configuration: vscode.WorkspaceConfiguration,
+  ): SolidityServerLogLevel {
     const setting = configuration.get<string>('solidity.server.log', 'verbose');
     return SolidityServerLogLevel.fromString(setting);
   }
 
-  private static readTsServerPluginPaths(configuration: vscode.WorkspaceConfiguration): string[] {
+  private static readTsServerPluginPaths(
+    configuration: vscode.WorkspaceConfiguration,
+  ): string[] {
     return configuration.get<string[]>('solidity.server.pluginPaths', []);
   }
 
-  private static readNpmLocation(configuration: vscode.WorkspaceConfiguration): string | null {
+  private static readNpmLocation(
+    configuration: vscode.WorkspaceConfiguration,
+  ): string | null {
     return configuration.get<string | null>('solidity.npm', null);
   }
-
 }

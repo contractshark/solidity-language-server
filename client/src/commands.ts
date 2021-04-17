@@ -1,15 +1,15 @@
-import * as path from "path";
+import * as path from 'path';
 import {
-  window, /*workspace,*/
+  window /*workspace,*/,
   Diagnostic,
   DiagnosticCollection,
   // Range,
   // Selection,
-  Uri
-} from "vscode";
+  Uri,
+} from 'vscode';
 
-import { LspManager } from "solc-lsp";
-import { solcErrToDiagnostic } from "./diagnostics";
+import { LspManager } from 'solc-lsp';
+import { solcErrToDiagnostic } from './diagnostics';
 
 // // FIXME put into a function
 // function selectionToRange(selection: Selection): Range {
@@ -21,16 +21,17 @@ import { solcErrToDiagnostic } from "./diagnostics";
 //   );
 // }
 
-
-export function compileActiveContract(diagnosticCollection: DiagnosticCollection, lspMgr: LspManager) {
-
+export function compileActiveContract(
+  diagnosticCollection: DiagnosticCollection,
+  lspMgr: LspManager,
+) {
   const editor = window.activeTextEditor;
   if (!editor) {
     return; // We need something open
   }
 
   const fileName = editor.document.fileName;
-  if (path.extname(fileName) !== ".sol") {
+  if (path.extname(fileName) !== '.sol') {
     window.showWarningMessage(`${fileName} not a solidity file (*.sol)`);
     return;
   }
@@ -56,5 +57,4 @@ export function compileActiveContract(diagnosticCollection: DiagnosticCollection
     diagnosticCollection.set(uri, diagnostics);
   }
   return;
-
 }

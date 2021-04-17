@@ -14,25 +14,22 @@
 } from "vscode-languageserver";
 */
 
-
 import {
-	createConnection,
-	TextDocuments,
-	Diagnostic,
-	DiagnosticSeverity,
-	ProposedFeatures,
-	InitializeParams,
-	DidChangeConfigurationNotification,
-	CompletionItem,
-	CompletionItemKind,
-	TextDocumentPositionParams,
-	TextDocumentSyncKind,
-	InitializeResult
+  createConnection,
+  TextDocuments,
+  Diagnostic,
+  DiagnosticSeverity,
+  ProposedFeatures,
+  InitializeParams,
+  DidChangeConfigurationNotification,
+  CompletionItem,
+  CompletionItemKind,
+  TextDocumentPositionParams,
+  TextDocumentSyncKind,
+  InitializeResult,
 } from 'vscode-languageserver/node';
 
-import {
-	TextDocument
-} from 'vscode-languageserver-textdocument';
+import { TextDocument } from 'vscode-languageserver-textdocument';
 
 // Create a connection for the server. The connection uses Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -70,28 +67,28 @@ connection.onInitialize((params: InitializeParams) => {
       textDocumentSync: documents.syncKind,
       // Tell the client that the server supports code completion
       completionProvider: {
-        resolveProvider: true
-      }
-    }
+        resolveProvider: true,
+      },
+    },
   };
 });
 
 function registerProviders(connection: Connection) {
   // Register for all configuration changes.
   const client = connection.client;
-  connection.console.log("Hi rocky");
+  connection.console.log('Hi rocky');
   client.register(DidChangeConfigurationNotification.type, undefined);
 }
 
 connection.onInitialized(() => {
-  connection.console.log("DEBUG: connection initalized");
+  connection.console.log('DEBUG: connection initalized');
   if (hasConfigurationCapability) {
     // Register for all configuration changes.
     registerProviders(connection);
   }
   if (hasWorkspaceFolderCapability) {
-    connection.workspace.onDidChangeWorkspaceFolders(_event => {
-      connection.console.log("Workspace folder change event received.");
+    connection.workspace.onDidChangeWorkspaceFolders((_event) => {
+      connection.console.log('Workspace folder change event received.');
     });
   }
 });
@@ -110,7 +107,7 @@ let globalSettings: SoliditySettings = defaultSettings;
 // Cache the settings of all open documents
 const documentSettings: Map<string, Thenable<SoliditySettings>> = new Map();
 
-connection.onDidChangeConfiguration(change => {
+connection.onDidChangeConfiguration((change) => {
   if (hasConfigurationCapability) {
     // Reset all cached document settings
     documentSettings.clear();
@@ -132,7 +129,7 @@ function getDocumentSettings(resource: string): Thenable<SoliditySettings> {
   if (!result) {
     result = connection.workspace.getConfiguration({
       scopeUri: resource,
-      section: "languageServerSolidity"
+      section: 'languageServerSolidity',
     });
     documentSettings.set(resource, result);
   }
@@ -140,13 +137,13 @@ function getDocumentSettings(resource: string): Thenable<SoliditySettings> {
 }
 
 // Only keep settings for open documents
-documents.onDidClose(e => {
+documents.onDidClose((e) => {
   documentSettings.delete(e.document.uri);
 });
 
 // The content of a text document has changed. This event is emitted
 // when the text document first opened or when its content has changed.
-documents.onDidChangeContent(change => {
+documents.onDidChangeContent((change) => {
   validateTextDocument(change.document);
 });
 
@@ -167,27 +164,27 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
       severity: DiagnosticSeverity.Warning,
       range: {
         start: textDocument.positionAt(m.index),
-        end: textDocument.positionAt(m.index + m[0].length)
+        end: textDocument.positionAt(m.index + m[0].length),
       },
       message: `${m[0]} is all uppercase.`,
-      source: "ex"
+      source: 'ex',
     };
     if (hasDiagnosticRelatedInformationCapability) {
       diagnostic.relatedInformation = [
         {
           location: {
             uri: textDocument.uri,
-            range: Object.assign({}, diagnostic.range)
+            range: Object.assign({}, diagnostic.range),
           },
-          message: "Spelling matters"
+          message: 'Spelling matters',
         },
         {
           location: {
             uri: textDocument.uri,
-            range: Object.assign({}, diagnostic.range)
+            range: Object.assign({}, diagnostic.range),
           },
-          message: "Particularly for names"
-        }
+          message: 'Particularly for names',
+        },
       ];
     }
     diagnostics.push(diagnostic);
@@ -197,9 +194,9 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
   connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
 }
 
-connection.onDidChangeWatchedFiles(_change => {
+connection.onDidChangeWatchedFiles((_change) => {
   // Monitored files have change in VSCode
-  connection.console.log("We received an file change event");
+  connection.console.log('We received an file change event');
 });
 
 // This handler provides the initial list of the completion items.
@@ -210,17 +207,17 @@ connection.onCompletion(
     // info and always provide the same completion items.
     return [
       {
-        label: "TypeScript",
+        label: 'TypeScript',
         kind: CompletionItemKind.Text,
-        data: 1
+        data: 1,
       },
       {
-        label: "JavaScript",
+        label: 'JavaScript',
         kind: CompletionItemKind.Text,
-        data: 2
-      }
+        data: 2,
+      },
     ];
-  }
+  },
 );
 
 // This handler resolves additional information for the item selected in
@@ -228,14 +225,14 @@ connection.onCompletion(
 connection.onCompletionResolve(
   (item: CompletionItem): CompletionItem => {
     if (item.data === 1) {
-      item.detail = "TypeScript details";
-      item.documentation = "TypeScript documentation";
+      item.detail = 'TypeScript details';
+      item.documentation = 'TypeScript documentation';
     } else if (item.data === 2) {
-      item.detail = "JavaScript details";
-      item.documentation = "JavaScript documentation";
+      item.detail = 'JavaScript details';
+      item.documentation = 'JavaScript documentation';
     }
     return item;
-  }
+  },
 );
 
 /*
