@@ -1,4 +1,4 @@
-import {
+/** import {
   createConnection,
   TextDocuments,
   TextDocument,
@@ -12,6 +12,27 @@ import {
   TextDocumentPositionParams,
   Connection
 } from "vscode-languageserver";
+*/
+
+
+import {
+	createConnection,
+	TextDocuments,
+	Diagnostic,
+	DiagnosticSeverity,
+	ProposedFeatures,
+	InitializeParams,
+	DidChangeConfigurationNotification,
+	CompletionItem,
+	CompletionItemKind,
+	TextDocumentPositionParams,
+	TextDocumentSyncKind,
+	InitializeResult
+} from 'vscode-languageserver/node';
+
+import {
+	TextDocument
+} from 'vscode-languageserver-textdocument';
 
 // Create a connection for the server. The connection uses Node's IPC as a transport.
 // Also include all preview / proposed LSP features.

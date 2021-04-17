@@ -2,17 +2,22 @@
    "name": "solidity-language-server",
    "description": "A language server for Solidity language",
    "version": "1.0.0",
-   "author": "Rocky Bernstein",
    "license": "MIT",
    "engines": {
       "node": "*"
    },
-   "repository": {
-      "type": "git",
-      "url": "https://github.com/rocky/solidity-language-server"
-   },
    "dependencies": {
-      "vscode-languageserver": "^4.1.3"
+      "@reactivex/rxjs": "^6.6.7",
+      "glob": "^7.1.6",
+      "semaphore-async-await": "^1.5.1",
+      "vscode-languageserver": "^7.0.0",
+      "vscode-languageserver-textdocument": "^1.0.1"
    },
-   "scripts": {}
+   "scripts": {},
+   "devDependencies": {
+      "fs-extra": "^9.1.0",
+      "ts-node": "^9.1.1",
+      "tslib": "^2.2.0",
+      "typescript": "^3.5.3"
+   }
 }
